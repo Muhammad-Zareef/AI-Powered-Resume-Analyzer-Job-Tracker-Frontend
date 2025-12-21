@@ -1,4 +1,9 @@
 
+const api = axios.create({
+    baseURL: "https://ai-powered-resume-analyzer-job-tracker-backend-bg28-at7au0xts.vercel.app",
+    withCredentials: true,
+});
+
 // Initialize
 document.addEventListener("DOMContentLoaded", function () {
     checkAuth();
@@ -6,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function checkAuth() {
     try {
-        const res = await axios.get("http://localhost:3000/api/resume/auth", { withCredentials: true });
+        const res = await api.get("/api/resume/auth");
         if (res.data.user.role === "admin") {
             window.location.href = "dashboard/index.html";
         } else {
@@ -110,7 +115,7 @@ async function handleLogin(e) {
     let loginEmail = document.getElementById("loginEmail").value;
     let loginPassword = document.getElementById("loginPassword").value;
     try {
-        const res = await axios.post('http://localhost:3000/api/login', { loginEmail, loginPassword }, { withCredentials: true });
+        const res = await api.post('/api/login', { loginEmail, loginPassword });
         if (res.data.status === 200) {
             if (res.data.user.role === "admin") {
                 setTimeout(() => { window.location.href = "./dashboard/index.html"; }, 1000);
@@ -152,7 +157,7 @@ async function handleSignup(e) {
     }
     confirmPasswordError.classList.add("hidden");
     try {
-        const res = await axios.post("http://localhost:3000/api/signup", { name, email, password });
+        const res = await api.post("/api/signup", { name, email, password });
         if (res.data.status == 20) {
             setTimeout(() => { showAuthModal('login'); }, 1200);
             Swal.fire({
