@@ -158,7 +158,7 @@ async function handleSignup(e) {
     confirmPasswordError.classList.add("hidden");
     try {
         const res = await api.post("/api/signup", { name, email, password });
-        if (res.data.status == 20) {
+        if (res.data.status == 200) {
             setTimeout(() => { showAuthModal('login'); }, 1200);
             Swal.fire({
                 title: "Signup Successful!",
