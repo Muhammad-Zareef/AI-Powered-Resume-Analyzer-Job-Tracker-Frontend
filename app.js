@@ -1,8 +1,13 @@
 
 const api = axios.create({
-    baseURL: "https://ai-powered-resume-analyzer-job-tracker-backend-bg28-at7au0xts.vercel.app",
+    baseURL: "https://ai-powered-resume-analyzer-job-tracker-backend-bg28-88ywoms5s.vercel.app",
     withCredentials: true,
 });
+
+// const api = axios.create({
+//     baseURL: "https://ai-powered-resume-analyzer-job-tracker-backend-bg28-at7au0xts.vercel.app",
+//     withCredentials: true,
+// });
 
 // Initialize
 document.addEventListener("DOMContentLoaded", function () {
