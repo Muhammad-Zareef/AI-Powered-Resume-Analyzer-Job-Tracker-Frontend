@@ -1008,7 +1008,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load initial data for dashboard
     getResumes();
 
-    getJobs();
+    getUsers();
 
     document.getElementById('logout-button').addEventListener('click', showLogoutModal);
 
