@@ -1006,8 +1006,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initUserManagement();
 
     // Load initial data for dashboard
-    getResumes();
-
     getUsers();
 
     document.getElementById('logout-button').addEventListener('click', showLogoutModal);
