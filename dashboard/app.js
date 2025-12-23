@@ -206,13 +206,7 @@ function initNavigation() {
                 document.getElementById('sidebarOverlay').classList.add('hidden');
             }
             // Load data for the page
-            if (targetPage === 'resumes') {
-                getResumes();
-            } else if (targetPage === 'jobs') {
-                getJobs();
-            } else if (targetPage === 'users') {
-                getUsers();
-            } else if (targetPage === 'dashboard') {
+            if (targetPage === 'dashboard') {
                 loadDashboardStats();
                 loadRecentActivity();
             }
