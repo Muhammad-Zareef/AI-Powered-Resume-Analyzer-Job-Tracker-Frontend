@@ -1,4 +1,9 @@
 
+const api = axios.create({
+    baseURL: "https://ai-powered-resume-analyzer-job-trac-liard.vercel.app",
+    withCredentials: true,
+});
+
 // State Management
 let state = {
     currentTab: "analyzer",
@@ -15,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function checkAuth() {
     try {
-        await axios.get("http://localhost:3000/api/resume/auth", { withCredentials: true });
+        await api.get("/api/resume/auth");
     } catch (err) {
         window.location.href = "/index.html";
         console.error('Authorization Error:', err);
@@ -24,7 +29,7 @@ async function checkAuth() {
 
 async function getJobs() {
     try {
-        const res = await axios.get('http://localhost:3000/api/jobs', { withCredentials: true });
+        const res = await api.get('/api/jobs');
         renderJobOptions(res.data);
     } catch (err) {
         console.error('Get job error:', err);
@@ -102,7 +107,7 @@ async function analyzeResume(e) {
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Analyzing...';
     try {
-        const res = await axios.post('http://localhost:3000/api/resume/analyze', formData , { withCredentials: true });
+        const res = await api.post('/api/resume/analyze', formData );
         setTimeout(() => {
             displayResults(res.data.newResume);
             renderHistory();
@@ -194,7 +199,7 @@ async function downloadGrammarText(button) {
         return;
     }
     try {
-        const response = await axios.post('http://localhost:3000/api/resume/download', { content: text }, { responseType: "blob" });
+        const response = await api.post('/api/resume/download', { content: text }, { responseType: "blob" });
         const blob = new Blob([response.data], { type: "text/plain" });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -252,7 +257,7 @@ async function addJob(e) {
             notes,
             appliedDate: Date.now(),
         };
-        const res = await axios.post('http://localhost:3000/api/jobs', job);
+        const res = await api.post('/api/jobs', job);
         Swal.fire({
             title: "Job Published!",
             text: "Your Job has been published successfully",
@@ -281,7 +286,7 @@ async function deleteJob(id) {
             confirmButtonText: "Yes, delete it!"
         }).then(async (result) => {
             if (result.isConfirmed) {
-                await axios.delete(`http://localhost:3000/api/jobs/${id}`);
+                await api.delete(`/api/jobs/${id}`);
                 Swal.fire({
                     title: "Deleted!",
                     text: "The Job has been successfully deleted",
@@ -310,7 +315,7 @@ function filterJobs(status) {
 
 async function renderJobs() {
     try {
-        const res = await axios.get('http://localhost:3000/api/jobs');
+        const res = await api.get('/api/jobs');
         const filtered = state.currentFilter === "all" ? res.data : res.data.filter((j) => j.status === state.currentFilter);
         const html = filtered.length === 0 ? '<div class="bg-white rounded-lg border p-12 text-center" style="border-color: var(--border);"><i class="fas fa-briefcase text-4xl mb-4 block" style="color: var(--border);"></i><p class="font-medium" style="color: var(--secondary);">No jobs yet</p><p class="text-sm" style="color: var(--secondary);">Start tracking your applications</p></div>' : filtered.map((job) => getJobCard(job)).join("");
         document.getElementById("jobsList").innerHTML = html;
@@ -358,7 +363,7 @@ function getJobCard(job) {
 
 async function openEditModal(jobId) {
     try {
-        const res = await axios.get(`http://localhost:3000/api/jobs/${jobId}`, { withCredentials: true });
+        const res = await api.get(`/api/jobs/${jobId}`);
         const job = res.data.job;
         document.getElementById("jobId").value = jobId;
         document.getElementById("editJobCompany").value = job.company;
@@ -396,7 +401,7 @@ async function saveJobEdit(e) {
             });
             return;
         }
-        await axios.put(`http://localhost:3000/api/jobs/${jobId}`, { company, position, description, status, link, notes });
+        await api.put(`/api/jobs/${jobId}`, { company, position, description, status, link, notes });
         Swal.fire({
             title: "Updated Successfully",
             text: "Your changes have been saved",
@@ -425,7 +430,7 @@ function toggleHistory() {
 
 async function renderHistory() {
     try {
-        const res = await axios.get('http://localhost:3000/api/resume/', { withCredentials: true });
+        const res = await api.get('/api/resume/');
         document.getElementById("historyTotal").textContent = res.data.length;
         const html = res.data.length === 0
                 ? '<div class="text-center py-12" style="color: var(--secondary);"><i class="fas fa-inbox text-4xl mb-3 block opacity-30"></i><p class="text-sm">No analyses yet</p><p class="text-xs mt-1">Analyze your first resume to see it here</p></div>'
@@ -453,7 +458,7 @@ async function renderHistory() {
 
 async function viewHistory(id) {
     try {
-        const res = await axios.get('http://localhost:3000/api/resume/', { withCredentials: true });
+        const res = await api.get('/api/resume/');
         const item = res.data.find((h) => h._id === id);
         displayResults(item);
         switchTab("analyzer");
@@ -474,7 +479,7 @@ function deleteHistory(id) {
             confirmButtonText: "Yes, delete it!"
         }).then(async (result) => {
             if (result.isConfirmed) {
-                await axios.delete(`http://localhost:3000/api/resume/deleteResume/${id}`);
+                await api.delete(`/api/resume/deleteResume/${id}`);
                 Swal.fire({
                     title: "Deleted!",
                     text: "The Resume has been successfully deleted",
@@ -502,7 +507,7 @@ function clearAllHistory() {
             confirmButtonText: "Yes, delete it!"
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const res = await axios.delete('http://localhost:3000/api/resume/clearAllHistory', { withCredentials: true });
+                const res = await api.delete('/api/resume/clearAllHistory');
                 Swal.fire({
                     title: "History Cleared!",
                     text: "Your resume history has been successfully deleted",
@@ -538,7 +543,7 @@ const logout = async () => {
         timer: 1250
     });
     try {
-        await axios.post("http://localhost:3000/api/logout", { withCredentials: true });
+        await api.post("/api/logout");
         setTimeout(() => {
             window.location.href = "/index.html";
         }, 1000);

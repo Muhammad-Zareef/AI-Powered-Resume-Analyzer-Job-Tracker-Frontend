@@ -1,10 +1,16 @@
+
+const api = axios.create({
+    baseURL: "https://ai-powered-resume-analyzer-job-trac-liard.vercel.app",
+    withCredentials: true,
+});
+
 // ============================================
 // MOCK DATA
 // ============================================
 
 async function checkUserRole() {
     try {
-        const res = await axios.get('http://localhost:3000/admin/dashboard', { withCredentials: true });
+        const res = await api.get('/admin/dashboard');
         document.getElementById('admin-name').textContent = res.data.admin.name;
     } catch (err) {
         window.location.href = '/index.html';
@@ -14,7 +20,7 @@ async function checkUserRole() {
 
 const getResumes = async () => {
     try {
-        const res = await axios.get('http://localhost:3000/admin/resumes', { withCredentials: true });
+        const res = await api.get('/admin/resumes');
         renderResumeTable(res.data);
     } catch (err) {
         console.error('Get resumes error:', err);
@@ -23,7 +29,7 @@ const getResumes = async () => {
 
 const getJobs = async () => {
     try {
-        const res = await axios.get('http://localhost:3000/admin/jobs', { withCredentials: true });
+        const res = await api.get('/admin/jobs');
         renderJobTable(res.data);
     } catch (err) {
         console.error('Get jobs error:', err);
@@ -32,7 +38,7 @@ const getJobs = async () => {
 
 const getUsers = async () => {
     try {
-        const res = await axios.get('http://localhost:3000/admin/users', { withCredentials: true });
+        const res = await api.get('/admin/users');
         renderUserTable(res.data);
     } catch (err) {
         console.error('Get users error:', err);
@@ -41,7 +47,7 @@ const getUsers = async () => {
 
 async function loadDashboardStats() {
     try {
-        const res = await axios.get('http://localhost:3000/admin/dashboard-stats', { withCredentials: true });
+        const res = await api.get('/admin/dashboard-stats');
         if (!res.data.success) return;
         const stats = res.data.data;
         document.getElementById('totalResumes').textContent = stats.totalResumes;
@@ -91,7 +97,7 @@ function timeAgo(date) {
 
 async function loadRecentActivity() {
     try {
-        const res = await axios.get('http://localhost:3000/admin/recent-activity', { withCredentials: true });
+        const res = await api.get('/admin/recent-activity');
         const result = res.data;
         if (!result.success) return;
         const container = document.getElementById('recentActivityList');
@@ -326,7 +332,7 @@ function renderResumeTable(resumes) {
 
 async function viewResumeDetails(id) {
     try {
-        const res = await axios.get(`http://localhost:3000/admin/resumes/${id}`, { withCredentials: true });
+        const res = await api.get(`/admin/resumes/${id}`);
         const resume = res.data.resume;
         const content = `
             <div class="space-y-4">
@@ -415,7 +421,7 @@ function deleteResume(id, userName) {
 
 async function confirmDeleteResume(id) {
     try {
-        await axios.delete(`http://localhost:3000/admin/resumes/${id}`);
+        await api.delete(`/admin/resumes/${id}`);
         closeModal();
         getResumes();
     } catch (err) {
@@ -434,7 +440,7 @@ async function initResumeFilters() {
     const aiFilter = document.getElementById('aiFilter');
     const dateFilter = document.getElementById('dateFilter');
     try {
-        const res = await axios.get('http://localhost:3000/admin/resumes', { withCredentials: true });
+        const res = await api.get('/admin/resumes');
         renderResumeTable(res.data);
     } catch (err) {
         console.error('Resume filters error:', err);
@@ -447,7 +453,7 @@ async function initResumeFilters() {
         const date = dateFilter.value;
         try {
             const query = new URLSearchParams({ search, ats, ai, date }).toString();
-            const res = await axios.get(`http://localhost:3000/admin/resumes/filter?${query}`, { withCredentials: true });
+            const res = await api.get(`/admin/resumes/filter?${query}`);
             renderResumeTable(res.data.resumes); // pass backend data
         } catch (error) {
             console.error('Failed to fetch resumes:', error);
@@ -519,7 +525,7 @@ function renderJobTable(jobs = []) {
 
 async function viewJobDetails(jobId) {
     try {
-        const res = await axios.get(`http://localhost:3000/admin/jobs/${jobId}`, { withCredentials: true });
+        const res = await api.get(`/admin/jobs/${jobId}`);
         const job = res.data.job;
         const content = `
             <div class="space-y-4">
@@ -642,7 +648,7 @@ async function saveJob(id = null) {
     if (id !== 'null') {
         // Update existing job
         try {
-            await axios.put(`http://localhost:3000/admin/jobs/${id}`, { company, position, description, status, link, notes, appliedDate });
+            await api.put(`/admin/jobs/${id}`, { company, position, description, status, link, notes, appliedDate });
             closeModal();
             getJobs();
         } catch (error) {
@@ -652,7 +658,7 @@ async function saveJob(id = null) {
         // Create new job
         const newJob = { company, position, description, status, appliedDate, link, notes };
         try {
-            await axios.post('http://localhost:3000/admin/jobs', newJob, { withCredentials: true });
+            await api.post('/admin/jobs', newJob);
             closeModal();
             getJobs();
         } catch (err) {
@@ -663,7 +669,7 @@ async function saveJob(id = null) {
 
 async function editJob(id) {
     try {
-        const res = await axios.get(`http://localhost:3000/admin/jobs/${id}`, { withCredentials: true });
+        const res = await api.get(`/admin/jobs/${id}`);
         createJobForm(res.data.job);
     } catch (err) {
         console.error('Edit job error:', err);
@@ -695,7 +701,7 @@ function deleteJob(id, company, position) {
 
 async function confirmDeleteJob(id) {
     try {
-        const res = await axios.delete(`http://localhost:3000/admin/jobs/${id}`);
+        const res = await api.delete(`/admin/jobs/${id}`);
         closeModal();
         getJobs();
     } catch (err) {
@@ -718,7 +724,7 @@ async function initJobManagement() {
     const statusFilter = document.getElementById('jobStatusFilter');
     const companyFilter = document.getElementById('jobCompanyFilter');
     try {
-        const res = await axios.get('http://localhost:3000/admin/jobs', { withCredentials: true });
+        const res = await api.get('/admin/jobs');
         renderJobTable(res.data);
     } catch (err) {
         console.error("Get jobs error:", err);
@@ -736,7 +742,7 @@ async function initJobManagement() {
             params.append('company', companyFilter.value.trim());
         }
         try {
-            const res = await axios.get(`http://localhost:3000/admin/jobs/filter?${params.toString()}`, { withCredentials: true });
+            const res = await api.get(`/admin/jobs/filter?${params.toString()}`);
             if (res.data.success) renderJobTable(res.data.jobs);
         } catch (err) {
             console.error('Job Filter Error:', err);
@@ -850,7 +856,7 @@ async function saveUser(id) {
     if (id !== 'null') {
         // Update existing user
         try {
-            await axios.put(`http://localhost:3000/admin/users/${id}`, { name, email, role });
+            await api.put(`/admin/users/${id}`, { name, email, role });
             closeModal();
             getUsers();
         } catch (error) {
@@ -861,7 +867,7 @@ async function saveUser(id) {
         const password = document.getElementById('userPassword').value;
         const newUser = { name, email, password, role };
         try {
-            await axios.post('http://localhost:3000/admin/users', newUser);
+            await api.post('/admin/users', newUser);
             closeModal();
             getUsers();
         } catch (err) {
@@ -873,7 +879,7 @@ async function saveUser(id) {
 
 async function editUser(id) {
     try {
-        const res = await axios.get(`http://localhost:3000/admin/users/${id}`, { withCredentials: true });
+        const res = await api.get(`/admin/users/${id}`);
         createUserForm(res.data.user);
     } catch (err) {
         console.error('Edit User Error:', err);
@@ -882,7 +888,7 @@ async function editUser(id) {
 
 async function deleteUser(id) {
     try {
-        const res = await axios.get(`http://localhost:3000/admin/users/${id}`, { withCredentials: true });
+        const res = await api.get(`/admin/users/${id}`);
         const user = res.data.user;
         const content = `
             <div class="text-center py-4">
@@ -911,7 +917,7 @@ async function deleteUser(id) {
 
 async function confirmDeleteUser(id) {
     try {
-        await axios.delete(`http://localhost:3000/admin/users/${id}`);
+        await api.delete(`/admin/users/${id}`);
         closeModal();
         getUsers();
     } catch (err) {
@@ -955,7 +961,7 @@ const showLogoutModal = () => {
 
 const adminLogout = async () => {
     try {
-        await axios.post('http://localhost:3000/admin/logout', { withCredentials: true });
+        await api.post('/admin/logout');
         closeModal();
         // Redirect to login page
         window.location.href = '/index.html';

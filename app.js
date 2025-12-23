@@ -6,7 +6,7 @@ const api = axios.create({
 
 // Initialize
 document.addEventListener("DOMContentLoaded", function () {
-    // checkAuth();
+    checkAuth();
 });
 
 async function checkAuth() {
