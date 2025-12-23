@@ -1008,6 +1008,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load initial data for dashboard
     getResumes();
 
+    getJobs();
+
     document.getElementById('logout-button').addEventListener('click', showLogoutModal);
 
     console.log('Admin Dashboard initialized successfully!');
