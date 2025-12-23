@@ -162,7 +162,7 @@ async function handleSignup(e) {
     }
     confirmPasswordError.classList.add("hidden");
     try {
-        const res = await axios.post("https://ai-powered-resume-analyzer-job-tracker-backend-bg28-88ywoms5s.vercel.app/api/signup", { name, email, password });
+        const res = await axios.post("https://ai-powered-resume-analyzer-job-trac-liard.vercel.app/api/signup", { name, email, password });
         console.log(res);
         if (res.data.status == 200) {
             setTimeout(() => { showAuthModal('login'); }, 1200);
