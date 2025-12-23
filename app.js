@@ -1,13 +1,8 @@
 
 const api = axios.create({
-    baseURL: "https://ai-powered-resume-analyzer-job-tracker-backend-bg28-88ywoms5s.vercel.app",
+    baseURL: "https://ai-powered-resume-analyzer-job-trac-liard.vercel.app",
     withCredentials: true,
 });
-
-// const api = axios.create({
-//     baseURL: "https://ai-powered-resume-analyzer-job-tracker-backend-bg28-at7au0xts.vercel.app",
-//     withCredentials: true,
-// });
 
 // Initialize
 document.addEventListener("DOMContentLoaded", function () {
@@ -162,7 +157,7 @@ async function handleSignup(e) {
     }
     confirmPasswordError.classList.add("hidden");
     try {
-        const res = await axios.post("https://ai-powered-resume-analyzer-job-trac-liard.vercel.app/api/signup", { name, email, password });
+        const res = await api.post("/api/signup", { name, email, password });
         console.log(res);
         if (res.data.status == 200) {
             setTimeout(() => { showAuthModal('login'); }, 1200);
