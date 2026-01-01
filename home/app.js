@@ -446,9 +446,8 @@ async function renderHistory() {
 
 async function viewHistory(id) {
     try {
-        const res = await api.get('/api/resume/');
-        const item = res.data.find((h) => h._id === id);
-        displayResults(item);
+        const res = await api.get(`/api/resume/${id}`);
+        displayResults(res.data.resume);
         switchTab("analyzer");
     } catch (err) {
         console.error('Get Resume Error:', err);
