@@ -14,7 +14,6 @@ let state = {
 document.addEventListener("DOMContentLoaded", function () {
     checkAuth();
     renderHistory();
-    getJobs();
     renderJobs();
 });
 
@@ -24,15 +23,6 @@ async function checkAuth() {
     } catch (err) {
         window.location.href = "/index.html";
         console.error('Authorization Error:', err);
-    }
-}
-
-async function getJobs() {
-    try {
-        const res = await api.get('/api/jobs');
-        renderJobOptions(res.data);
-    } catch (err) {
-        console.error('Get job error:', err);
     }
 }
 
@@ -268,7 +258,6 @@ async function addJob(e) {
         document.getElementById("jobForm").reset();
         renderJobs();
         toggleJobForm();
-        getJobs();
     } catch (error) {
         console.error('Add job error:', error);
     }
@@ -295,7 +284,6 @@ async function deleteJob(id) {
                     timer: 2000
                 });
                 renderJobs();
-                getJobs();
             }
         });
     } catch (error) {
@@ -310,19 +298,20 @@ function filterJobs(status) {
         btn.style.color = btn.dataset.filter === status ? "white" : "var(--secondary)";
         btn.style.borderColor = btn.dataset.filter === status ? "var(--primary)" : "var(--border)";
     });
-    renderJobs();
+    renderJobs(false);
 }
 
-async function renderJobs() {
+async function renderJobs(renderOptions = true) {
     try {
         const res = await api.get('/api/jobs');
+        if (renderOptions) renderJobOptions(res.data);
         const filtered = state.currentFilter === "all" ? res.data : res.data.filter((j) => j.status === state.currentFilter);
         const html = filtered.length === 0 ? '<div class="bg-white rounded-lg border p-12 text-center" style="border-color: var(--border);"><i class="fas fa-briefcase text-4xl mb-4 block" style="color: var(--border);"></i><p class="font-medium" style="color: var(--secondary);">No jobs yet</p><p class="text-sm" style="color: var(--secondary);">Start tracking your applications</p></div>' : filtered.map((job) => getJobCard(job)).join("");
         document.getElementById("jobsList").innerHTML = html;
         document.getElementById("jobCount").textContent = res.data.length;
         document.getElementById("jobCount").style.display = res.data.length > 0 ? "inline-block" : "none";
     } catch (error) {
-        console.error('Render job error:', error);
+        console.error('Get jobs error:', error);
     }
 }
 
@@ -411,7 +400,6 @@ async function saveJobEdit(e) {
         });
         closeEditModal();
         renderJobs();
-        getJobs();
     } catch (error) {
         console.error('Saving job error:', error);
     }
