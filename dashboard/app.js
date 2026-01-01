@@ -977,11 +977,13 @@ const adminLogout = async () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
     await checkUserRole();
-    await loadDashboardStats();
-    await loadRecentActivity();
 
     // Initialize theme
     initTheme();
+
+    await loadDashboardStats();
+    
+    await loadRecentActivity();
 
     // Initialize sidebar
     initSidebar();
