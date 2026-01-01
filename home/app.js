@@ -11,10 +11,10 @@ let state = {
 };
 
 // Initialize
-document.addEventListener("DOMContentLoaded", function () {
-    checkAuth();
-    renderHistory();
-    renderJobs();
+document.addEventListener("DOMContentLoaded", async function () {
+    await checkAuth();
+    await renderHistory();
+    await renderJobs();
 });
 
 async function checkAuth() {
@@ -256,7 +256,7 @@ async function addJob(e) {
             timer: 2000
         });
         document.getElementById("jobForm").reset();
-        renderJobs();
+        await renderJobs();
         toggleJobForm();
     } catch (error) {
         console.error('Add job error:', error);
@@ -304,7 +304,7 @@ function filterJobs(status) {
 async function renderJobs(renderOptions = true) {
     try {
         const res = await api.get('/api/jobs');
-        if (renderOptions) renderJobOptions(res.data);
+        if (renderOptions) await renderJobOptions(res.data);
         const filtered = state.currentFilter === "all" ? res.data : res.data.filter((j) => j.status === state.currentFilter);
         const html = filtered.length === 0 ? '<div class="bg-white rounded-lg border p-12 text-center" style="border-color: var(--border);"><i class="fas fa-briefcase text-4xl mb-4 block" style="color: var(--border);"></i><p class="font-medium" style="color: var(--secondary);">No jobs yet</p><p class="text-sm" style="color: var(--secondary);">Start tracking your applications</p></div>' : filtered.map((job) => getJobCard(job)).join("");
         document.getElementById("jobsList").innerHTML = html;
