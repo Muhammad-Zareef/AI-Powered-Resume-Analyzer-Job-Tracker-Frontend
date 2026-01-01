@@ -205,11 +205,6 @@ function initNavigation() {
                 document.getElementById('sidebar').classList.add('-translate-x-full');
                 document.getElementById('sidebarOverlay').classList.add('hidden');
             }
-            // Load data for the page
-            if (targetPage === 'dashboard') {
-                loadDashboardStats();
-                loadRecentActivity();
-            }
         });
     });
 }
@@ -418,6 +413,8 @@ async function confirmDeleteResume(id) {
         await api.delete(`/admin/resumes/${id}`);
         closeModal();
         getResumes();
+        loadDashboardStats();
+        loadRecentActivity();
     } catch (err) {
         console.error('Delete resume error:', err);
     }
@@ -645,6 +642,7 @@ async function saveJob(id = null) {
             await api.put(`/admin/jobs/${id}`, { company, position, description, status, link, notes, appliedDate });
             closeModal();
             getJobs();
+            loadRecentActivity();
         } catch (error) {
             console.error('Update job error: ', error);
         }
@@ -655,6 +653,8 @@ async function saveJob(id = null) {
             await api.post('/admin/jobs', newJob);
             closeModal();
             getJobs();
+            loadDashboardStats();
+            loadRecentActivity();
         } catch (err) {
             console.error('Create job error:', err);
         }
@@ -698,6 +698,8 @@ async function confirmDeleteJob(id) {
         const res = await api.delete(`/admin/jobs/${id}`);
         closeModal();
         getJobs();
+        loadDashboardStats();
+        loadRecentActivity();
     } catch (err) {
         console.error('Delete job error:', err);
     }
@@ -853,6 +855,7 @@ async function saveUser(id) {
             await api.put(`/admin/users/${id}`, { name, email, role });
             closeModal();
             getUsers();
+            loadRecentActivity();
         } catch (error) {
             console.error('Update user error:', error);
         }
@@ -864,6 +867,8 @@ async function saveUser(id) {
             await api.post('/admin/users', newUser);
             closeModal();
             getUsers();
+            loadDashboardStats();
+            loadRecentActivity();
         } catch (err) {
             alert(err.response.data.message);
             console.error('Create user error:', err);
@@ -914,6 +919,8 @@ async function confirmDeleteUser(id) {
         await api.delete(`/admin/users/${id}`);
         closeModal();
         getUsers();
+        loadDashboardStats();
+        loadRecentActivity();
     } catch (err) {
         console.error('Delete user error:', err);
     }
@@ -968,8 +975,8 @@ const adminLogout = async () => {
 // INITIALIZATION
 // ============================================
 
-document.addEventListener('DOMContentLoaded', () => {
-    checkUserRole();
+document.addEventListener('DOMContentLoaded', async () => {
+    await checkUserRole();
 
     loadDashboardStats();
 
