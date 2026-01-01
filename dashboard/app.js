@@ -979,10 +979,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     await checkUserRole();
 
     // Initialize theme
-    initTheme();
+    await initTheme();
 
     await loadDashboardStats();
-    
+
     await loadRecentActivity();
 
     // Initialize sidebar
