@@ -412,9 +412,9 @@ async function confirmDeleteResume(id) {
     try {
         await api.delete(`/admin/resumes/${id}`);
         closeModal();
-        getResumes();
-        loadDashboardStats();
-        loadRecentActivity();
+        await getResumes();
+        await loadDashboardStats();
+        await loadRecentActivity();
     } catch (err) {
         console.error('Delete resume error:', err);
     }
@@ -641,8 +641,8 @@ async function saveJob(id = null) {
         try {
             await api.put(`/admin/jobs/${id}`, { company, position, description, status, link, notes, appliedDate });
             closeModal();
-            getJobs();
-            loadRecentActivity();
+            await getJobs();
+            await loadRecentActivity();
         } catch (error) {
             console.error('Update job error: ', error);
         }
@@ -652,9 +652,9 @@ async function saveJob(id = null) {
         try {
             await api.post('/admin/jobs', newJob);
             closeModal();
-            getJobs();
-            loadDashboardStats();
-            loadRecentActivity();
+            await getJobs();
+            await loadDashboardStats();
+            await loadRecentActivity();
         } catch (err) {
             console.error('Create job error:', err);
         }
@@ -697,9 +697,9 @@ async function confirmDeleteJob(id) {
     try {
         const res = await api.delete(`/admin/jobs/${id}`);
         closeModal();
-        getJobs();
-        loadDashboardStats();
-        loadRecentActivity();
+        await getJobs();
+        await loadDashboardStats();
+        await loadRecentActivity();
     } catch (err) {
         console.error('Delete job error:', err);
     }
@@ -854,8 +854,8 @@ async function saveUser(id) {
         try {
             await api.put(`/admin/users/${id}`, { name, email, role });
             closeModal();
-            getUsers();
-            loadRecentActivity();
+            await getUsers();
+            await loadRecentActivity();
         } catch (error) {
             console.error('Update user error:', error);
         }
@@ -866,9 +866,9 @@ async function saveUser(id) {
         try {
             await api.post('/admin/users', newUser);
             closeModal();
-            getUsers();
-            loadDashboardStats();
-            loadRecentActivity();
+            await getUsers();
+            await loadDashboardStats();
+            await loadRecentActivity();
         } catch (err) {
             alert(err.response.data.message);
             console.error('Create user error:', err);
@@ -918,9 +918,9 @@ async function confirmDeleteUser(id) {
     try {
         await api.delete(`/admin/users/${id}`);
         closeModal();
-        getUsers();
-        loadDashboardStats();
-        loadRecentActivity();
+        await getUsers();
+        await loadDashboardStats();
+        await loadRecentActivity();
     } catch (err) {
         console.error('Delete user error:', err);
     }
@@ -977,10 +977,8 @@ const adminLogout = async () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
     await checkUserRole();
-
-    loadDashboardStats();
-
-    loadRecentActivity();
+    await loadDashboardStats();
+    await loadRecentActivity();
 
     // Initialize theme
     initTheme();
@@ -998,16 +996,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
     // Initialize resume filters
-    initResumeFilters();
+    await initResumeFilters();
 
     // Initialize job management
-    initJobManagement();
+    await initJobManagement();
 
     // Initialize user management
     initUserManagement();
 
     // Load initial data for dashboard
-    getUsers();
+    await getUsers();
 
     document.getElementById('logout-button').addEventListener('click', showLogoutModal);
 
