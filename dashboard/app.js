@@ -1,6 +1,6 @@
 
 const api = axios.create({
-    baseURL: "https://ai-powered-resume-analyzer-job-trac-liard.vercel.app",
+    baseURL: "https://ai-powered-resume-analyzer-job-trac-woad.vercel.app",
     withCredentials: true,
 });
 
@@ -128,7 +128,7 @@ async function loadRecentActivity() {
 // ============================================
 
 function initTheme() {
-    const theme = localStorage.getItem('theme') || 'light';
+    const theme = localStorage.getItem('theme') || 'dark';
     if (theme === 'dark') {
         document.documentElement.classList.add('dark');
     }

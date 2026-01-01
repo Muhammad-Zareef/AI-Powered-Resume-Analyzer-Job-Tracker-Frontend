@@ -1,6 +1,6 @@
 
 const api = axios.create({
-    baseURL: "https://ai-powered-resume-analyzer-job-trac-liard.vercel.app",
+    baseURL: "https://ai-powered-resume-analyzer-job-trac-woad.vercel.app",
     withCredentials: true,
 });
 
