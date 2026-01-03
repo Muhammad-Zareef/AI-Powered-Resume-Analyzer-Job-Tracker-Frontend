@@ -219,6 +219,9 @@ function toggleJobForm() {
 
 async function addJob(e) {
     e.preventDefault();
+    let btn = document.getElementById("addJobBtn");
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Adding job...';
+    btn.disabled = true;
     const company = document.getElementById("jobCompany").value;
     const position = document.getElementById("jobPosition").value;
     const description = document.getElementById("jobDescription").value;
@@ -232,10 +235,14 @@ async function addJob(e) {
                 title: "Missing Information!",
                 text: "Please fill in all required fields"
             });
+            btn.innerHTML = 'Add Job';
+            btn.disabled = false;
             return;
         }
         if (description.length < 50) {
-            alert("Resume text must be at least 50 characters");
+            alert("Job description must be at least 50 characters");
+            btn.innerHTML = 'Add Job';
+            btn.disabled = false;
             return;
         }
         const job = {
@@ -260,6 +267,9 @@ async function addJob(e) {
         toggleJobForm();
     } catch (error) {
         console.error('Add job error:', error);
+    } finally {
+        btn.innerHTML = 'Add Job';
+        btn.disabled = false;
     }
 }
 
@@ -374,6 +384,9 @@ function closeEditModal() {
 
 async function saveJobEdit(e) {
     e.preventDefault();
+    let btn = document.getElementById("saveChangesBtn");
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+    btn.disabled = true;
     const jobId = document.getElementById("jobId").value;
     const company = document.getElementById("editJobCompany").value;
     const position = document.getElementById("editJobPosition").value;
@@ -388,6 +401,8 @@ async function saveJobEdit(e) {
                 title: "Missing Information!",
                 text: "Please fill in all required fields"
             });
+            btn.innerHTML = 'Save Changes';
+            btn.disabled = false;
             return;
         }
         await api.put(`/api/jobs/${jobId}`, { company, position, description, status, link, notes });
@@ -402,6 +417,9 @@ async function saveJobEdit(e) {
         renderJobs();
     } catch (error) {
         console.error('Saving job error:', error);
+    } finally {
+        btn.innerHTML = 'Save Changes';
+        btn.disabled = false;
     }
 }
 
