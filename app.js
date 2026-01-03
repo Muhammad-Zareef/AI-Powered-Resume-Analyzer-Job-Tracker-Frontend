@@ -151,7 +151,7 @@ async function handleLogin(e) {
 
 async function handleSignup(e) {
     e.preventDefault();
-    let btn = document.getElementById("loginBtn");
+    let btn = document.getElementById("signupBtn");
     btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating account...';
     btn.disabled = true;
     const name = document.getElementById("signupName").value;
