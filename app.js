@@ -112,6 +112,9 @@ function validateEmail(email) {
 // Form Handlers
 async function handleLogin(e) {
     e.preventDefault();
+    let btn = document.getElementById("loginBtn");
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging...';
     let loginEmail = document.getElementById("loginEmail").value;
     let loginPassword = document.getElementById("loginPassword").value;
     try {
