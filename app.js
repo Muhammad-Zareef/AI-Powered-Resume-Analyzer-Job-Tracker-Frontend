@@ -151,6 +151,9 @@ async function handleLogin(e) {
 
 async function handleSignup(e) {
     e.preventDefault();
+    let btn = document.getElementById("loginBtn");
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating account...';
+    btn.disabled = true;
     const name = document.getElementById("signupName").value;
     const email = document.getElementById("signupEmail").value;
     const password = document.getElementById("signupPassword").value;
@@ -159,6 +162,8 @@ async function handleSignup(e) {
     if (password !== confirmPassword) {
         confirmPasswordError.textContent = "Passwords do not match";
         confirmPasswordError.classList.remove("hidden");
+        btn.innerHTML = 'Create Account';
+        btn.disabled = false;
         return;
     }
     confirmPasswordError.classList.add("hidden");
@@ -185,6 +190,9 @@ async function handleSignup(e) {
             timer: 2500
         });
         console.error('Signup error:', err.response.data.message);
+    }  finally {
+        btn.innerHTML = 'Create Account';
+        btn.disabled = false;
     }
 }
 
