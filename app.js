@@ -113,8 +113,8 @@ function validateEmail(email) {
 async function handleLogin(e) {
     e.preventDefault();
     let btn = document.getElementById("loginBtn");
-    btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging...';
+    btn.disabled = true;
     let loginEmail = document.getElementById("loginEmail").value;
     let loginPassword = document.getElementById("loginPassword").value;
     try {
@@ -143,6 +143,9 @@ async function handleLogin(e) {
         }
     } catch (error) {
         console.error('Login error:', error);
+    } finally {
+        btn.innerHTML = 'Login';
+        btn.disabled = false;
     }
 }
 
